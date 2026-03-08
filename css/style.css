@@ -507,31 +507,41 @@ body {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 25px;
     padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    padding: 20px 15px;
+    border-radius: 15px 15px 0 0;
 }
 
 .nav-btn {
     flex: 1;
-    padding: 15px 25px;
+    padding: 18px 25px;
     border: none;
-    border-radius: 12px;
-    font-size: 16px;
+    border-radius: 15px;
+    font-size: 17px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
+/* Кнопка НАЗАД - теперь тоже зелёная */
 .nav-btn.back-btn {
-    background: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, #3498db 0%, #5dade2 100%);
     color: #fff;
 }
 
 .nav-btn.back-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
 }
 
+/* Кнопка ДАЛЕЕ / ЗАВЕРШИТЬ - зелёная */
 .nav-btn.next-btn,
 .nav-btn.finish-btn {
     background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
@@ -541,15 +551,18 @@ body {
 .nav-btn.next-btn:hover,
 .nav-btn.finish-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
 }
 
+/* Неактивная кнопка */
 .nav-btn:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
     transform: none !important;
+    box-shadow: none !important;
 }
 
+/* Активная кнопка при нажатии */
 .nav-btn:active:not(:disabled) {
-    transform: translateY(-1px);
+    transform: translateY(1px);
 }
