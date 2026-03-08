@@ -1,9 +1,9 @@
-// character.js - Логика создания персонажа
+// character.js - Логика создания персонажа с навигацией
 
 // Глобальные переменные
 let selectedRace = null;
 let selectedClass = null;
-let statPoints = 15;
+let currentStep = 1;
 
 // Базовые статы (уровень 1)
 let baseStats = {
@@ -87,10 +87,8 @@ function selectRace(race) {
     // Применить бонусы
     applyBonuses();
     
-    // ✅ АВТОМАТИЧЕСКИЙ ПЕРЕХОД К ВЫБОРУ КЛАССА (через 500мс)
-    setTimeout(() => {
-        showStep(2);
-    }, 500);
+    // ✅ Активировать кнопку "Далее"
+    updateNavigationButtons();
 }
 
 // Выбор класса
@@ -109,10 +107,8 @@ function selectClass(className) {
     // Применить бонусы
     applyBonuses();
     
-    // ✅ АВТОМАТИЧЕСКИЙ ПЕРЕХОД К РАСПРЕДЕЛЕНИЮ СТАТОВ (через 500мс)
-    setTimeout(() => {
-        showStep(3);
-    }, 500);
+    // ✅ Активировать кнопку "Далее"
+    updateNavigationButtons();
 }
 
 // Применить бонусы расы и класса
@@ -199,8 +195,20 @@ function updateStatDisplay() {
     document.getElementById('stat-mag-def').textContent = currentStats.magDef;
 }
 
-// Переключение шагов
-function showStep(step) {
+// ✅ Переключение шагов с кнопками
+function goToStep(step) {
+    // Проверки для перехода вперёд
+    if (step > currentStep) {
+        if (step === 2 && !selectedRace) {
+            tg.showAlert('Сначала выберите расу!');
+            return;
+        }
+        if (step === 3 && !selectedClass) {
+            tg.showAlert('Сначала выберите класс!');
+            return;
+        }
+    }
+    
     // Скрыть все шаги
     document.querySelectorAll('.selection-step').forEach(s => {
         s.classList.remove('active');
@@ -214,8 +222,29 @@ function showStep(step) {
     document.getElementById(steps[step - 1]).classList.add('active');
     document.querySelector(`.progress-step[data-step="${step}"]`).classList.add('active');
     
+    // Обновить текущий шаг
+    currentStep = step;
+    
+    // Обновить кнопки навигации
+    updateNavigationButtons();
+    
     // Прокрутка вверх
     window.scrollTo(0, 0);
+}
+
+// ✅ Обновление состояния кнопок
+function updateNavigationButtons() {
+    // Кнопка "Далее" на шаге 1 (раса)
+    const raceNextBtn = document.getElementById('race-next-btn');
+    if (raceNextBtn) {
+        raceNextBtn.disabled = !selectedRace;
+    }
+    
+    // Кнопка "Далее" на шаге 2 (класс)
+    const classNextBtn = document.getElementById('class-next-btn');
+    if (classNextBtn) {
+        classNextBtn.disabled = !selectedClass;
+    }
 }
 
 // Завершение создания персонажа
@@ -253,6 +282,9 @@ function showFinalStats(data) {
         step.classList.remove('active');
     });
     document.getElementById('character-final').classList.add('active');
+    
+    // Скрыть прогресс бар
+    document.querySelector('.progress-bar').style.display = 'none';
     
     const html = `
         <p><strong>🧬 Раса:</strong> ${raceNames[data.race]}</p>
