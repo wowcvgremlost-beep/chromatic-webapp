@@ -388,11 +388,16 @@
 
     <!-- Главное меню (после создания персонажа) -->
     <div id="menu-screen" class="screen">
-        <div class="header">
-            <h1>🎮 Хроматическое Подземелье</h1>
-            <div class="player-info">
-                <span id="player-name">Игрок</span>
-                <span class="level-badge">Ур. <span id="player-level">1</span></span>
+        <!-- ✅ ОБНОВЛЁННАЯ ШАПКА -->
+        <div class="header-with-stats">
+            <div class="header-title">🎮 Хроматическое Подземелье</div>
+            <div class="header-race-class">
+                <span>🧬 Раса: <b id="menu-race">-</b></span>
+                <span>⚔️ Класс: <b id="menu-class">-</b></span>
+            </div>
+            <div class="header-player-info">
+                <span class="player-name-display" id="menu-player-name">Игрок</span>
+                <span class="level-badge">Ур. <span id="menu-level">1</span></span>
             </div>
         </div>
 
@@ -431,7 +436,6 @@
             </button>
         </div>
     </div>
-</div>
 
 <script src="js/app.js"></script>
 <script src="js/character.js"></script>
