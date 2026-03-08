@@ -34,6 +34,14 @@ function showScreen(screenId) {
     }
 }
 
+// ✅ Обновление шапки с именем, расой и классом
+function updateMenuHeader(playerData) {
+    document.getElementById('menu-player-name').textContent = playerData.name || 'Игрок';
+    document.getElementById('menu-race').textContent = raceNames[playerData.race] || '-';
+    document.getElementById('menu-class').textContent = classNames[playerData.class] || '-';
+    document.getElementById('menu-level').textContent = playerData.level || 1;
+}
+
 // Обновление статов игрока
 function updatePlayerStats() {
     document.getElementById('player-name').textContent = player.name;
