@@ -74,35 +74,45 @@ const classNames = {
 // Выбор расы
 function selectRace(race) {
     selectedRace = race;
-
+    
     // Визуальное выделение
     document.querySelectorAll('.race-card').forEach(card => {
         card.classList.remove('selected');
     });
     event.currentTarget.classList.add('selected');
-
+    
     // Обновить сводку
     document.getElementById('summary-race').textContent = raceNames[race];
-
+    
     // Применить бонусы
     applyBonuses();
+    
+    // ✅ АВТОМАТИЧЕСКИЙ ПЕРЕХОД К ВЫБОРУ КЛАССА (через 500мс)
+    setTimeout(() => {
+        showStep(2);
+    }, 500);
 }
 
 // Выбор класса
 function selectClass(className) {
     selectedClass = className;
-
+    
     // Визуальное выделение
     document.querySelectorAll('.class-card').forEach(card => {
         card.classList.remove('selected');
     });
     event.currentTarget.classList.add('selected');
-
+    
     // Обновить сводку
     document.getElementById('summary-class').textContent = classNames[className];
-
+    
     // Применить бонусы
     applyBonuses();
+    
+    // ✅ АВТОМАТИЧЕСКИЙ ПЕРЕХОД К РАСПРЕДЕЛЕНИЮ СТАТОВ (через 500мс)
+    setTimeout(() => {
+        showStep(3);
+    }, 500);
 }
 
 // Применить бонусы расы и класса
@@ -110,7 +120,7 @@ function applyBonuses() {
     // Сброс к базовым значениям
     currentStats = { ...baseStats };
     tempStatPoints = 15;
-
+    
     // Бонусы расы
     if (selectedRace && raceBonuses[selectedRace]) {
         const bonuses = raceBonuses[selectedRace];
@@ -124,7 +134,7 @@ function applyBonuses() {
         if (bonuses.magAtk) currentStats.magAtk += bonuses.magAtk;
         if (bonuses.magDef) currentStats.magDef += bonuses.magDef;
     }
-
+    
     // Бонусы класса
     if (selectedClass && classBonuses[selectedClass]) {
         const bonuses = classBonuses[selectedClass];
@@ -137,40 +147,29 @@ function applyBonuses() {
         if (bonuses.magAtk) currentStats.magAtk += bonuses.magAtk;
         if (bonuses.magDef) currentStats.magDef += bonuses.magDef;
     }
-
+    
     // Обновить отображение
     updateStatDisplay();
-
-    // Если выбраны и раса и класс - перейти к статам
-    if (selectedRace && selectedClass) {
-        showStep(3);
-    }
 }
 
 // Изменение стата
 function changeStat(stat, delta) {
-    const costs = {
-        'hp': 1,
-        'mp': 1,
-        'stealth': 1,
-        'dodge': 1,
-        'phys_atk': 1,
-        'phys_def': 1,
-        'mag_atk': 1,
-        'mag_def': 1
-    };
-
-    const statKey = stat === 'hp' ? 'maxHp' :
-                    stat === 'mp' ? 'maxMp' :
-                    stat === 'phys_atk' ? 'physAtk' :
-                    stat === 'phys_def' ? 'physDef' :
-                    stat === 'mag_atk' ? 'magAtk' :
+    const statKey = stat === 'hp' ? 'maxHp' : 
+                    stat === 'mp' ? 'maxMp' : 
+                    stat === 'phys_atk' ? 'physAtk' : 
+                    stat === 'phys_def' ? 'physDef' : 
+                    stat === 'mag_atk' ? 'magAtk' : 
                     stat === 'mag_def' ? 'magDef' : stat;
-
+    
     // Проверка: можно ли изменить
-    if (delta > 0 && tempStatPoints <= 0) return;
-    if (delta < 0 && currentStats[statKey] <= baseStats[statKey]) return;
-
+    if (delta > 0 && tempStatPoints <= 0) {
+        tg.showAlert('Нет свободных очков!');
+        return;
+    }
+    if (delta < 0 && currentStats[statKey] <= baseStats[statKey]) {
+        return;
+    }
+    
     // Изменение
     if (delta > 0) {
         if (stat === 'hp') currentStats.maxHp += 10;
@@ -183,7 +182,7 @@ function changeStat(stat, delta) {
         else currentStats[statKey] -= 1;
         tempStatPoints++;
     }
-
+    
     updateStatDisplay();
 }
 
@@ -202,17 +201,21 @@ function updateStatDisplay() {
 
 // Переключение шагов
 function showStep(step) {
-    document.querySelectorAll('.selection-step').forEach(step => {
-        step.classList.remove('active');
+    // Скрыть все шаги
+    document.querySelectorAll('.selection-step').forEach(s => {
+        s.classList.remove('active');
     });
-    document.querySelectorAll('.progress-step').forEach(step => {
-        step.classList.remove('active');
+    document.querySelectorAll('.progress-step').forEach(s => {
+        s.classList.remove('active');
     });
-
-    // Активировать нужный шаг
+    
+    // Показать нужный шаг
     const steps = ['race-selection', 'class-selection', 'stat-allocation'];
     document.getElementById(steps[step - 1]).classList.add('active');
     document.querySelector(`.progress-step[data-step="${step}"]`).classList.add('active');
+    
+    // Прокрутка вверх
+    window.scrollTo(0, 0);
 }
 
 // Завершение создания персонажа
@@ -221,14 +224,14 @@ async function finishCharacterCreation() {
         tg.showAlert('Выберите расу и класс!');
         return;
     }
-
+    
     if (tempStatPoints > 0) {
         const confirm = await new Promise(resolve => {
             tg.showConfirm(`Осталось ${tempStatPoints} нераспределённых очков. Завершить?`, resolve);
         });
         if (!confirm) return;
     }
-
+    
     // Сохранение данных
     const characterData = {
         race: selectedRace,
@@ -236,10 +239,10 @@ async function finishCharacterCreation() {
         stats: { ...currentStats },
         statPoints: tempStatPoints
     };
-
+    
     // Отправка данных боту
     tg.sendData(JSON.stringify(characterData));
-
+    
     // Показать финальный экран
     showFinalStats(characterData);
 }
@@ -250,7 +253,7 @@ function showFinalStats(data) {
         step.classList.remove('active');
     });
     document.getElementById('character-final').classList.add('active');
-
+    
     const html = `
         <p><strong>🧬 Раса:</strong> ${raceNames[data.race]}</p>
         <p><strong>⚔️ Класс:</strong> ${classNames[data.className]}</p>
@@ -263,7 +266,7 @@ function showFinalStats(data) {
         <p><strong>🔮 Маг.Атака:</strong> ${data.stats.magAtk}</p>
         <p><strong>🧿 Маг.Защита:</strong> ${data.stats.magDef}</p>
     `;
-
+    
     document.getElementById('final-stats').innerHTML = html;
 }
 
