@@ -502,21 +502,6 @@ body {
     }
 }
 
-/* Навигация между шагами */
-.step-navigation {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 2px solid rgba(255, 255, 255, 0.2);
-    position: sticky;
-    bottom: 0;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    padding: 20px 15px;
-    border-radius: 15px 15px 0 0;
-}
-
 .nav-btn {
     flex: 1;
     padding: 18px 25px;
@@ -565,16 +550,6 @@ body {
 /* Активная кнопка при нажатии */
 .nav-btn:active:not(:disabled) {
     transform: translateY(1px);
-}
-
-/* Контейнер для строк статов - с прокруткой если нужно */
-.stat-rows-container {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 10px;
-    max-height: 350px;
-    overflow-y: auto;
 }
 
 /* Фиксированная навигация внизу экрана */
