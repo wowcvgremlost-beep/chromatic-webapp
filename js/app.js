@@ -2,7 +2,7 @@
 
 // Инициализация Telegram WebApp
 const tg = window.Telegram.WebApp;
-tg.expand(); // Развернуть на весь экран
+tg.expand();
 
 // Глобальные переменные
 let player = {
@@ -21,6 +21,30 @@ let player = {
     created: false
 };
 
+// Названия рас
+const raceNames = {
+    'human': 'Человек',
+    'elf': 'Эльф',
+    'dwarf': 'Гном',
+    'lizard': 'Людоящер',
+    'orc': 'Орк',
+    'minotaur': 'Минотавр',
+    'naga': 'Нага'
+};
+
+// Названия классов
+const classNames = {
+    'warrior': 'Воин',
+    'barbarian': 'Варвар',
+    'paladin': 'Паладин',
+    'wizard': 'Волшебник',
+    'warlock': 'Колдун',
+    'druid': 'Друид',
+    'ranger': 'Следопыт',
+    'rogue': 'Плут',
+    'monk': 'Монах'
+};
+
 // Переключение экранов
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
@@ -28,18 +52,17 @@ function showScreen(screenId) {
     });
     document.getElementById(screenId).classList.add('active');
 
-    // Обновить UI при возврате в меню
     if (screenId === 'menu-screen') {
         updatePlayerStats();
     }
 }
 
-// ✅ Обновление шапки с именем, расой и классом
-function updateMenuHeader(playerData) {
-    document.getElementById('menu-player-name').textContent = playerData.name || 'Игрок';
-    document.getElementById('menu-race').textContent = raceNames[playerData.race] || '-';
-    document.getElementById('menu-class').textContent = classNames[playerData.class] || '-';
-    document.getElementById('menu-level').textContent = playerData.level || 1;
+// ✅ Обновление шапки меню
+function updateMenuHeader() {
+    document.getElementById('menu-player-name').textContent = player.name || 'Игрок';
+    document.getElementById('menu-race').textContent = raceNames[player.race] || '-';
+    document.getElementById('menu-class').textContent = classNames[player.class] || '-';
+    document.getElementById('menu-level').textContent = player.level || 1;
 }
 
 // Обновление статов игрока
@@ -52,11 +75,12 @@ function updatePlayerStats() {
     document.getElementById('mp-max').textContent = player.maxMp;
     document.getElementById('gold-value').textContent = player.gold;
 
-    // Обновить полоски
     const hpPercent = (player.hp / player.maxHp) * 100;
     const mpPercent = (player.mp / player.maxMp) * 100;
     document.getElementById('hp-bar').style.width = hpPercent + '%';
     document.getElementById('mp-bar').style.width = mpPercent + '%';
+
+    updateMenuHeader();
 }
 
 // Загрузка данных игрока
@@ -83,19 +107,16 @@ tg.onEvent('mainButtonClicked', function() {
 
 // Инициализация при загрузке
 window.addEventListener('load', () => {
-    // Проверка, есть ли картинка
     const banner = document.getElementById('game-banner');
     if (banner) {
         banner.onerror = function() {
-            // Если картинки нет, скрыть контейнер
             document.querySelector('.banner-container').style.display = 'none';
         };
     }
-
+    
     setTimeout(() => {
         showScreen('welcome-screen');
     }, 1500);
 });
 
-// Готово!
 tg.ready();
