@@ -137,6 +137,13 @@
                     <div class="race-bonus">+3 Маг.Атака, +10 MP</div>
                     <div class="race-desc">Древние хранители магических тайн</div>
                 </div>
+
+                <!-- ✅ КНОПКИ НАВИГАЦИИ -->
+                <div class="step-navigation">
+                    <button class="nav-btn next-btn" onclick="goToStep(2)" id="race-next-btn" disabled>
+                        Далее →
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -216,6 +223,16 @@
                     <div class="class-role">Рукопашный Бой</div>
                     <div class="class-bonus">+10 HP, +2 Физ.Атака, +2 Физ.Защита</div>
                     <div class="class-desc">Мастер боевых искусств</div>
+                </div>
+
+                <!-- ✅ КНОПКИ НАВИГАЦИИ -->
+                <div class="step-navigation">
+                    <button class="nav-btn back-btn" onclick="goToStep(1)">
+                        ← Назад
+                    </button>
+                    <button class="nav-btn next-btn" onclick="goToStep(3)" id="class-next-btn" disabled>
+                        Далее →
+                    </button>
                 </div>
             </div>
         </div>
@@ -331,6 +348,16 @@
                         <span class="stat-value" id="stat-mag-def">5</span>
                         <button class="stat-btn plus" onclick="changeStat('mag_def', 1)">+</button>
                     </div>
+
+                    <!-- ✅ КНОПКИ НАВИГАЦИИ -->
+                    <div class="step-navigation">
+                        <button class="nav-btn back-btn" onclick="goToStep(2)">
+                            ← Назад
+                        </button>
+                        <button class="nav-btn finish-btn" onclick="finishCharacterCreation()">
+                            ✅ Завершить
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -399,4 +426,5 @@
 <script src="js/app.js"></script>
 <script src="js/character.js"></script>
 </body>
+
 </html>
