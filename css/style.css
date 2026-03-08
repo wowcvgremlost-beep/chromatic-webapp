@@ -501,3 +501,55 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* Навигация между шагами */
+.step-navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-btn {
+    flex: 1;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-btn.back-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.nav-btn.back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-btn.next-btn,
+.nav-btn.finish-btn {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: #fff;
+}
+
+.nav-btn.next-btn:hover,
+.nav-btn.finish-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.nav-btn:active:not(:disabled) {
+    transform: translateY(-1px);
+}
