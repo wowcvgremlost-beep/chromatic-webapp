@@ -337,5 +337,23 @@ function showFinalStats(data) {
 
 // Начать игру
 function startGame() {
+    savePlayerData();
+    updateMenuHeader();
     showScreen('menu-screen');
+}
+
+// Сохранение данных игрока для отображения в меню
+function savePlayerData() {
+    player.name = playerName;
+    player.race = selectedRace;
+    player.class = selectedClass;
+    player.level = 1;
+    player.hp = currentStats.maxHp;
+    player.maxHp = currentStats.maxHp;
+    player.mp = currentStats.maxMp;
+    player.maxMp = currentStats.maxMp;
+    player.gold = 0;
+    player.exp = 0;
+    player.stats = { ...currentStats };
+    player.created = true;
 }
