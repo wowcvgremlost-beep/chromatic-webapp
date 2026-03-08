@@ -1,3 +1,5 @@
+// app.js - Основные функции WebApp
+
 // Инициализация Telegram WebApp
 const tg = window.Telegram.WebApp;
 tg.expand(); // Развернуть на весь экран
@@ -15,22 +17,9 @@ let player = {
     exp: 0,
     race: null,
     class: null,
-    stats: {
-        stealth: 10,
-        dodge: 5,
-        physAtk: 10,
-        physDef: 5,
-        magAtk: 10,
-        magDef: 5
-    },
-    statPoints: 15,
-    inventory: [],
-    equipment: {}
+    stats: {},
+    created: false
 };
-
-let tempStats = { ...player.stats };
-let selectedRace = null;
-let selectedClass = null;
 
 // Переключение экранов
 function showScreen(screenId) {
@@ -39,7 +28,7 @@ function showScreen(screenId) {
     });
     document.getElementById(screenId).classList.add('active');
 
-    // Обновить UI
+    // Обновить UI при возврате в меню
     if (screenId === 'menu-screen') {
         updatePlayerStats();
     }
@@ -62,47 +51,43 @@ function updatePlayerStats() {
     document.getElementById('mp-bar').style.width = mpPercent + '%';
 }
 
-// Загрузка данных с сервера
+// Загрузка данных игрока
 async function loadPlayerData() {
     try {
         const response = await fetch('/api/player/' + player.id);
         if (response.ok) {
             const data = await response.json();
             player = { ...player, ...data };
-            updatePlayerStats();
+            if (player.created) {
+                updatePlayerStats();
+                showScreen('menu-screen');
+            }
         }
     } catch (error) {
-        console.log('Нет сохраненных данных, начинаем с нуля');
+        console.log('Нет сохранённых данных');
     }
 }
 
-// Сохранение данных на сервер
-async function savePlayerData() {
-    try {
-        await fetch('/api/player/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(player)
-        });
-    } catch (error) {
-        console.error('Ошибка сохранения:', error);
-    }
-}
+// Обработка данных от Telegram
+tg.onEvent('mainButtonClicked', function() {
+    console.log('Main button clicked');
+});
 
 // Инициализация при загрузке
 window.addEventListener('load', () => {
+    // Проверка, есть ли картинка
+    const banner = document.getElementById('game-banner');
+    if (banner) {
+        banner.onerror = function() {
+            // Если картинки нет, скрыть контейнер
+            document.querySelector('.banner-container').style.display = 'none';
+        };
+    }
+
     setTimeout(() => {
-        showScreen('menu-screen');
-        loadPlayerData();
+        showScreen('welcome-screen');
     }, 1500);
 });
 
-// Показ уведомления
-function showAlert(message) {
-    tg.showAlert(message);
-}
-
-// Подтверждение
-function showConfirm(message, callback) {
-    tg.showConfirm(message, callback);
-}
+// Готово!
+tg.ready();
