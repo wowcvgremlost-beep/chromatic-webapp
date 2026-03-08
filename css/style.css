@@ -722,53 +722,67 @@ body {
     margin-top: 8px;
 }
 
-/* Обновлённая шапка с расой и классом */
-.header-with-stats {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 12px 15px;
-    margin-bottom: 15px;
-    backdrop-filter: blur(10px);
-}
-
-.header-title {
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.header-race-class {
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
-    margin-bottom: 8px;
-}
-
-.header-race-class span {
-    background: rgba(255, 215, 0, 0.2);
-    padding: 4px 10px;
-    border-radius: 8px;
-}
-
-.header-player-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.player-name-display {
-    font-weight: 600;
-}
-
-.level-badge {
-    background: #ffd700;
-    color: #000;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-weight: bold;
-    font-size: 13px;
-}
+//* === ШАПКА ГЛАВНОГО МЕНЮ === */
+ .game-header {
+     background: linear-gradient(135deg, rgba(30, 60, 114, 0.9) 0%, rgba(42, 82, 152, 0.9) 100%);
+     border-radius: 15px;
+     padding: 15px;
+     margin-bottom: 15px;
+     backdrop-filter: blur(10px);
+     border: 1px solid rgba(255, 255, 255, 0.2);
+     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+ }
+ 
+ .header-title {
+     font-size: 18px;
+     font-weight: bold;
+     text-align: center;
+     margin-bottom: 12px;
+     color: #ffd700;
+     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+ }
+ 
+ .header-race-class {
+     display: flex;
+     justify-content: space-between;
+     font-size: 13px;
+     margin-bottom: 10px;
+     padding: 8px 12px;
+     background: rgba(255, 255, 255, 0.1);
+     border-radius: 10px;
+ }
+ 
+ .race-display, .class-display {
+     flex: 1;
+     text-align: center;
+ }
+ 
+ .race-display b, .class-display b {
+     color: #2ecc71;
+     font-weight: 600;
+ }
+ 
+ .header-player-info {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     font-size: 14px;
+     padding-top: 10px;
+     border-top: 1px solid rgba(255, 255, 255, 0.2);
+ }
+ 
+ .player-name-display {
+     font-weight: 600;
+     color: #fff;
+     font-size: 15px;
+ }
+ 
+ .level-badge {
+     background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+     color: #000;
+     padding: 4px 12px;
+     border-radius: 12px;
+     font-weight: bold;
+     font-size: 13px;
+     box-shadow: 0 2px 10px rgba(255, 215, 0, 0.4);
+ }
