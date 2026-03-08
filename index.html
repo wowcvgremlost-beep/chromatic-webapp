@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Хроматическое Подземелье</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+    <!-- Экран загрузки -->
+    <div id="loading-screen" class="screen active">
+        <div class="loader">⚔️</div>
+        <h1>Хроматическое Подземелье</h1>
+        <p>Загрузка...</p>
+    </div>
+
+    <!-- Главное меню -->
+    <div id="menu-screen" class="screen">
+        <div class="header">
+            <h1>🎮 Хроматическое Подземелье</h1>
+            <div class="player-info">
+                <span id="player-name">Игрок</span>
+                <span class="level-badge">Ур. <span id="player-level">1</span></span>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat hp">
+                <div class="stat-label">❤️ HP</div>
+                <div class="stat-value"><span id="hp-current">100</span>/<span id="hp-max">100</span></div>
+                <div class="stat-bar"><div id="hp-bar" class="bar-fill"></div></div>
+            </div>
+            <div class="stat mp">
+                <div class="stat-label">💙 MP</div>
+                <div class="stat-value"><span id="mp-current">50</span>/<span id="mp-max">50</span></div>
+                <div class="stat-bar"><div id="mp-bar" class="bar-fill"></div></div>
+            </div>
+            <div class="stat gold">
+                <div class="stat-label">💰 Золото</div>
+                <div class="stat-value" id="gold-value">0</div>
+            </div>
+        </div>
+
+        <div class="menu-buttons">
+            <button class="menu-btn primary" onclick="showScreen('character-screen')">
+                👤 Персонаж
+            </button>
+            <button class="menu-btn" onclick="showScreen('map-screen')">
+                🗺️ Карта
+            </button>
+            <button class="menu-btn" onclick="showScreen('inventory-screen')">
+                🎒 Инвентарь
+            </button>
+            <button class="menu-btn" onclick="showScreen('shop-screen')">
+                🏪 Магазин
+            </button>
+            <button class="menu-btn" onclick="showScreen('battle-screen')">
+                ⚔️ Бой
+            </button>
+        </div>
+    </div>
+
+    <!-- Создание персонажа -->
+    <div id="character-screen" class="screen">
+        <div class="header">
+            <button class="back-btn" onclick="showScreen('menu-screen')">← Назад</button>
+            <h2>👤 Персонаж</h2>
+        </div>
+
+        <div id="char-creation" class="content">
+            <h3>Выберите расу:</h3>
+            <div class="race-grid" id="race-selection">
+                <button class="race-btn" onclick="selectRace('human')">
+                    <div class="race-icon">👤</div>
+                    <div class="race-name">Человек</div>
+                    <div class="race-bonus">+5 очков</div>
+                </button>
+                <button class="race-btn" onclick="selectRace('elf')">
+                    <div class="race-icon">🧝</div>
+                    <div class="race-name">Эльф</div>
+                    <div class="race-bonus">+2 Скр.Атака, +1 Уклонение</div>
+                </button>
+                <button class="race-btn" onclick="selectRace('dwarf')">
+                    <div class="race-icon">🧔</div>
+                    <div class="race-name">Гном</div>
+                    <div class="race-bonus">+2 Физ/Маг Защита</div>
+                </button>
+                <button class="race-btn" onclick="selectRace('lizard')">
+                    <div class="race-icon">🦎</div>
+                    <div class="race-name">Людоящер</div>
+                    <div class="race-bonus">+2 Скр.Атака, +1 Физ.Атака</div>
+                </button>
+                <button class="race-btn" onclick="selectRace('orc')">
+                    <div class="race-icon">👹</div>
+                    <div class="race-name">Орк</div>
+                    <div class="race-bonus">+10 HP, +1 Физ.Атака</div>
+                </button>
+                <button class="race-btn" onclick="selectRace('minotaur')">
+                    <div class="race-icon">🐂</div>
+                    <div class="race-name">Минотавр</div>
+                    <div class="race-bonus">+20 HP, +2 Физ.Защита</div>
+                </button>
+                <button class="race-btn" onclick="selectRace('naga')">
+                    <div class="race-icon">🐍</div>
+                    <div class="race-name">Нага</div>
+                    <div class="race-bonus">+3 Маг.Атака, +10 MP</div>
+                </button>
+            </div>
+
+            <h3>Выберите класс:</h3>
+            <div class="class-grid" id="class-selection">
+                <button class="class-btn" onclick="selectClass('warrior')">
+                    <div class="class-icon">⚔️</div>
+                    <div class="class-name">Воин</div>
+                    <div class="class-desc">Танк, защита</div>
+                </button>
+                <button class="class-btn" onclick="selectClass('barbarian')">
+                    <div class="class-icon">🪓</div>
+                    <div class="class-name">Варвар</div>
+                    <div class="class-desc">Высокий урон</div>
+                </button>
+                <button class="class-btn" onclick="selectClass('paladin')">
+                    <div class="class-icon">🛡️</div>
+                    <div class="class-name">Паладин</div>
+                    <div class="class-desc">Лечение, защита</div>
+                </button>
+                <button class="class-btn" onclick="selectClass('wizard')">
+                    <div class="class-icon">🔮</div>
+                    <div class="class-name">Волшебник</div>
+                    <div class="class-desc">Магический урон</div>
+                </button>
+                <button class="class-btn" onclick="selectClass('warlock')">
+                    <div class="class-icon">🩸</div>
+                    <div class="class-name">Колдун</div>
+                    <div class="class-desc">Тёмная магия</div>
+                </button>
+                <button class="class-btn" onclick="selectClass('druid')">
+                    <div class="class-icon">🌿</div>
+                    <div class="class-name">Друид</div>
+                    <div class="class-desc">Баланс магии</div>
+                </button>
+                <button class="class-btn" onclick="selectClass('ranger')">
+                    <div class="class-icon">🏹</div>
+                    <div class="class-name">Следопыт</div>
+                    <div class="class-desc">Увороты, криты</div>
+                </button>
+                <button class="class-btn" onclick="selectClass('rogue')">
+                    <div class="class-icon">🗡️</div>
+                    <div class="class-name">Плут</div>
+                    <div class="class-desc">Скрытность</div>
+                </button>
+                <button class="class-btn" onclick="selectClass('monk')">
+                    <div class="class-icon">🥋</div>
+                    <div class="class-name">Монах</div>
+                    <div class="class-desc">Рукопашный бой</div>
+                </button>
+            </div>
+
+            <div class="stat-allocation" id="stat-allocation" style="display:none;">
+                <h3>Распределите очки (осталось: <span id="stat-points">15</span>)</h3>
+                <div class="stat-row">
+                    <span>❤️ HP</span>
+                    <button onclick="changeStat('hp', -1)">-</button>
+                    <span id="stat-hp">100</span>
+                    <button onclick="changeStat('hp', 1)">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>💙 MP</span>
+                    <button onclick="changeStat('mp', -1)">-</button>
+                    <span id="stat-mp">50</span>
+                    <button onclick="changeStat('mp', 1)">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>🗡️ Скр.Атака</span>
+                    <button onclick="changeStat('stealth', -1)">-</button>
+                    <span id="stat-stealth">10</span>
+                    <button onclick="changeStat('stealth', 1)">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>🌀 Уклонение</span>
+                    <button onclick="changeStat('dodge', -1)">-</button>
+                    <span id="stat-dodge">5</span>
+                    <button onclick="changeStat('dodge', 1)">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>⚔️ Физ.Атака</span>
+                    <button onclick="changeStat('phys_atk', -1)">-</button>
+                    <span id="stat-phys-atk">10</span>
+                    <button onclick="changeStat('phys_atk', 1)">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>🛡️ Физ.Защита</span>
+                    <button onclick="changeStat('phys_def', -1)">-</button>
+                    <span id="stat-phys-def">5</span>
+                    <button onclick="changeStat('phys_def', 1)">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>🔮 Маг.Атака</span>
+                    <button onclick="changeStat('mag_atk', -1)">-</button>
+                    <span id="stat-mag-atk">10</span>
+                    <button onclick="changeStat('mag_atk', 1)">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>🧿 Маг.Защита</span>
+                    <button onclick="changeStat('mag_def', -1)">-</button>
+                    <span id="stat-mag-def">5</span>
+                    <button onclick="changeStat('mag_def', 1)">+</button>
+                </div>
+
+                <button class="finish-btn" onclick="finishCharacterCreation()">
+                    ✅ Создать персонажа
+                </button>
+            </div>
+        </div>
+
+        <div id="char-stats" class="content" style="display:none;">
+            <h3>Ваши характеристики:</h3>
+            <div class="stats-display" id="final-stats"></div>
+            <button class="menu-btn primary" onclick="showScreen('menu-screen')">
+                ✅ Готово
+            </button>
+        </div>
+    </div>
+
+    <!-- Экран карты -->
+    <div id="map-screen" class="screen">
+        <div class="header">
+            <button class="back-btn" onclick="showScreen('menu-screen')">← Назад</button>
+            <h2>🗺️ Карта подземелья</h2>
+        </div>
+        <div class="content">
+            <div class="triangle-field" id="triangle-field">
+                <!-- Треугольники будут генерироваться JS -->
+            </div>
+            <div class="map-controls">
+                <button class="map-btn" onclick="movePlayer('left')">⬅️</button>
+                <button class="map-btn" onclick="movePlayer('forward')">⬆️</button>
+                <button class="map-btn" onclick="movePlayer('right')">➡️</button>
+            </div>
+            <div class="dice-roll">
+                <button class="dice-btn" onclick="rollDice()">🎲 Бросить d6</button>
+                <div id="dice-result" class="dice-result"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран инвентаря -->
+    <div id="inventory-screen" class="screen">
+        <div class="header">
+            <button class="back-btn" onclick="showScreen('menu-screen')">← Назад</button>
+            <h2>🎒 Инвентарь</h2>
+        </div>
+        <div class="content">
+            <div class="equipment-slots" id="equipment-slots">
+                <div class="equip-slot" data-slot="weapon_r">🗡️ Правая рука: <span>Пусто</span></div>
+                <div class="equip-slot" data-slot="weapon_l">🛡️ Левая рука: <span>Пусто</span></div>
+                <div class="equip-slot" data-slot="helmet">⛑️ Шлем: <span>Пусто</span></div>
+                <div class="equip-slot" data-slot="armor">👕 Броня: <span>Пусто</span></div>
+                <div class="equip-slot" data-slot="pants">👖 Штаны: <span>Пусто</span></div>
+                <div class="equip-slot" data-slot="boots">👢 Ботинки: <span>Пусто</span></div>
+                <div class="equip-slot" data-slot="gloves">🧤 Перчатки: <span>Пусто</span></div>
+            </div>
+            <div class="inventory-items" id="inventory-items">
+                <h3>Предметы:</h3>
+                <div id="items-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран магазина -->
+    <div id="shop-screen" class="screen">
+        <div class="header">
+            <button class="back-btn" onclick="showScreen('menu-screen')">← Назад</button>
+            <h2>🏪 Магазин</h2>
+        </div>
+        <div class="content">
+            <div class="shop-section">
+                <h3>🧪 Зелья</h3>
+                <div class="shop-item" onclick="buyItem('health_potion', 50)">
+                    <div class="item-icon">🧪</div>
+                    <div class="item-info">
+                        <div class="item-name">Зелье лечения</div>
+                        <div class="item-desc">+20 HP</div>
+                    </div>
+                    <div class="item-price">50 💰</div>
+                </div>
+                <div class="shop-item" onclick="buyItem('mana_potion', 50)">
+                    <div class="item-icon">💧</div>
+                    <div class="item-info">
+                        <div class="item-name">Зелье маны</div>
+                        <div class="item-desc">+15 MP</div>
+                    </div>
+                    <div class="item-price">50 💰</div>
+                </div>
+            </div>
+            <div class="shop-section">
+                <h3>📜 Свитки</h3>
+                <div class="shop-item" onclick="buyItem('scroll_fire', 300)">
+                    <div class="item-icon">📜</div>
+                    <div class="item-info">
+                        <div class="item-name">Свиток: Малая искра</div>
+                        <div class="item-desc">15 маг. урона</div>
+                    </div>
+                    <div class="item-price">300 💰</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран боя -->
+    <div id="battle-screen" class="screen">
+        <div class="header">
+            <h2>⚔️ Бой</h2>
+        </div>
+        <div class="content">
+            <div class="battle-arena">
+                <div class="fighter player-fighter" id="player-fighter">
+                    <div class="fighter-name">Герой</div>
+                    <div class="fighter-hp">
+                        <div class="hp-bar"><div id="battle-player-hp-bar" class="bar-fill"></div></div>
+                        <span id="battle-player-hp">100/100</span>
+                    </div>
+                </div>
+                <div class="vs">VS</div>
+                <div class="fighter enemy-fighter" id="enemy-fighter">
+                    <div class="fighter-name" id="enemy-name">Монстр</div>
+                    <div class="fighter-hp">
+                        <div class="hp-bar"><div id="battle-enemy-hp-bar" class="bar-fill"></div></div>
+                        <span id="battle-enemy-hp">20/20</span>
+                    </div>
+                </div>
+            </div>
+            <div class="battle-log" id="battle-log">
+                <div class="log-entry">Бой начался!</div>
+            </div>
+            <div class="battle-actions">
+                <button class="action-btn" onclick="battleAction('attack')">⚔️ Атака</button>
+                <button class="action-btn" onclick="battleAction('skill')">✨ Навык</button>
+                <button class="action-btn" onclick="battleAction('scroll')">📜 Свиток</button>
+                <button class="action-btn" onclick="battleAction('defend')">🛡️ Защита</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/character.js"></script>
+<script src="js/battle.js"></script>
+</body>
+</html>
