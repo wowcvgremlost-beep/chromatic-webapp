@@ -253,6 +253,7 @@
                 </div>
             </div>
 
+            <!-- СТРОКИ СТАТОВ -->
             <div class="stat-rows">
                 <div class="stat-row">
                     <div class="stat-info">
@@ -348,18 +349,20 @@
                         <span class="stat-value" id="stat-mag-def">5</span>
                         <button class="stat-btn plus" onclick="changeStat('mag_def', 1)">+</button>
                     </div>
-
-                    <!-- ✅ КНОПКИ НАВИГАЦИИ -->
-                    <div class="step-navigation">
-                        <button class="nav-btn back-btn" onclick="goToStep(2)">
-                            ← Назад
-                        </button>
-                        <button class="nav-btn finish-btn" onclick="finishCharacterCreation()">
-                            ✅ Завершить
-                        </button>
-                    </div>
                 </div>
             </div>
+            <!-- ✅ КОНЕЦ СТРОК СТАТОВ -->
+
+            <!-- ✅ КНОПКИ НАВИГАЦИИ (вне stat-rows, в конце шага) -->
+            <div class="step-navigation">
+                <button class="nav-btn back-btn" onclick="goToStep(2)">
+                    ← Назад
+                </button>
+                <button class="nav-btn finish-btn" onclick="finishCharacterCreation()">
+                    ✅ Завершить
+                </button>
+            </div>
+        </div>
 
             <button class="finish-btn" onclick="finishCharacterCreation()">
                 ✅ Завершить Создание
