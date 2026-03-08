@@ -1,9 +1,36 @@
 // character.js - Логика создания персонажа с навигацией
 
 // Глобальные переменные
+let playerName = '';  // ✅ НОВОЕ: имя игрока
 let selectedRace = null;
 let selectedClass = null;
 let currentStep = 1;
+
+// ✅ Функция валидации имени
+function validateName(name) {
+    // Разрешены: буквы (рус/лат), цифры, пробелы, дефис
+    const regex = /^[a-zA-Zа-яА-ЯёЁ0-9\s\-]{2,20}$/;
+    return regex.test(name.trim());
+}
+
+// ✅ Получение имени из поля ввода
+function getPlayerName() {
+    const input = document.getElementById('player-name-input');
+    let name = input.value.trim();
+
+    // Если пусто — используем имя из Telegram
+    if (!name) {
+        name = tg.initDataUnsafe?.user?.first_name || 'Игрок';
+    }
+
+    // Валидация
+    if (!validateName(name)) {
+        tg.showAlert('Имя должно содержать 2-20 символов (буквы, цифры, пробелы)');
+        return null;
+    }
+
+    return name;
+}
 
 // Базовые статы (уровень 1)
 let baseStats = {
@@ -74,19 +101,19 @@ const classNames = {
 // Выбор расы
 function selectRace(race) {
     selectedRace = race;
-    
+
     // Визуальное выделение
     document.querySelectorAll('.race-card').forEach(card => {
         card.classList.remove('selected');
     });
     event.currentTarget.classList.add('selected');
-    
+
     // Обновить сводку
     document.getElementById('summary-race').textContent = raceNames[race];
-    
+
     // Применить бонусы
     applyBonuses();
-    
+
     // ✅ Активировать кнопку "Далее"
     updateNavigationButtons();
 }
@@ -94,19 +121,19 @@ function selectRace(race) {
 // Выбор класса
 function selectClass(className) {
     selectedClass = className;
-    
+
     // Визуальное выделение
     document.querySelectorAll('.class-card').forEach(card => {
         card.classList.remove('selected');
     });
     event.currentTarget.classList.add('selected');
-    
+
     // Обновить сводку
     document.getElementById('summary-class').textContent = classNames[className];
-    
+
     // Применить бонусы
     applyBonuses();
-    
+
     // ✅ Активировать кнопку "Далее"
     updateNavigationButtons();
 }
@@ -116,7 +143,7 @@ function applyBonuses() {
     // Сброс к базовым значениям
     currentStats = { ...baseStats };
     tempStatPoints = 15;
-    
+
     // Бонусы расы
     if (selectedRace && raceBonuses[selectedRace]) {
         const bonuses = raceBonuses[selectedRace];
@@ -130,7 +157,7 @@ function applyBonuses() {
         if (bonuses.magAtk) currentStats.magAtk += bonuses.magAtk;
         if (bonuses.magDef) currentStats.magDef += bonuses.magDef;
     }
-    
+
     // Бонусы класса
     if (selectedClass && classBonuses[selectedClass]) {
         const bonuses = classBonuses[selectedClass];
@@ -143,20 +170,20 @@ function applyBonuses() {
         if (bonuses.magAtk) currentStats.magAtk += bonuses.magAtk;
         if (bonuses.magDef) currentStats.magDef += bonuses.magDef;
     }
-    
+
     // Обновить отображение
     updateStatDisplay();
 }
 
 // Изменение стата
 function changeStat(stat, delta) {
-    const statKey = stat === 'hp' ? 'maxHp' : 
-                    stat === 'mp' ? 'maxMp' : 
-                    stat === 'phys_atk' ? 'physAtk' : 
-                    stat === 'phys_def' ? 'physDef' : 
-                    stat === 'mag_atk' ? 'magAtk' : 
+    const statKey = stat === 'hp' ? 'maxHp' :
+                    stat === 'mp' ? 'maxMp' :
+                    stat === 'phys_atk' ? 'physAtk' :
+                    stat === 'phys_def' ? 'physDef' :
+                    stat === 'mag_atk' ? 'magAtk' :
                     stat === 'mag_def' ? 'magDef' : stat;
-    
+
     // Проверка: можно ли изменить
     if (delta > 0 && tempStatPoints <= 0) {
         tg.showAlert('Нет свободных очков!');
@@ -165,7 +192,7 @@ function changeStat(stat, delta) {
     if (delta < 0 && currentStats[statKey] <= baseStats[statKey]) {
         return;
     }
-    
+
     // Изменение
     if (delta > 0) {
         if (stat === 'hp') currentStats.maxHp += 10;
@@ -178,7 +205,7 @@ function changeStat(stat, delta) {
         else currentStats[statKey] -= 1;
         tempStatPoints++;
     }
-    
+
     updateStatDisplay();
 }
 
@@ -208,7 +235,7 @@ function goToStep(step) {
             return;
         }
     }
-    
+
     // Скрыть все шаги
     document.querySelectorAll('.selection-step').forEach(s => {
         s.classList.remove('active');
@@ -216,18 +243,18 @@ function goToStep(step) {
     document.querySelectorAll('.progress-step').forEach(s => {
         s.classList.remove('active');
     });
-    
+
     // Показать нужный шаг
     const steps = ['race-selection', 'class-selection', 'stat-allocation'];
     document.getElementById(steps[step - 1]).classList.add('active');
     document.querySelector(`.progress-step[data-step="${step}"]`).classList.add('active');
-    
+
     // Обновить текущий шаг
     currentStep = step;
-    
+
     // Обновить кнопки навигации
     updateNavigationButtons();
-    
+
     // Прокрутка вверх
     window.scrollTo(0, 0);
 }
@@ -239,7 +266,7 @@ function updateNavigationButtons() {
     if (raceNextBtn) {
         raceNextBtn.disabled = !selectedRace;
     }
-    
+
     // Кнопка "Далее" на шаге 2 (класс)
     const classNextBtn = document.getElementById('class-next-btn');
     if (classNextBtn) {
@@ -247,46 +274,52 @@ function updateNavigationButtons() {
     }
 }
 
-// Завершение создания персонажа
+// ✅ Обновите функцию finishCharacterCreation()
 async function finishCharacterCreation() {
+    // 1. Проверка имени
+    playerName = getPlayerName();
+    if (!playerName) return;
+
+    // 2. Проверка расы и класса
     if (!selectedRace || !selectedClass) {
         tg.showAlert('Выберите расу и класс!');
         return;
     }
-    
+
+    // 3. Проверка очков
     if (tempStatPoints > 0) {
         const confirm = await new Promise(resolve => {
             tg.showConfirm(`Осталось ${tempStatPoints} нераспределённых очков. Завершить?`, resolve);
         });
         if (!confirm) return;
     }
-    
-    // Сохранение данных
+
+    // 4. Сбор данных персонажа
     const characterData = {
+        name: playerName,  // ✅ Добавляем имя
         race: selectedRace,
         className: selectedClass,
         stats: { ...currentStats },
         statPoints: tempStatPoints
     };
-    
-    // Отправка данных боту
+
+    // 5. Отправка данных боту
     tg.sendData(JSON.stringify(characterData));
-    
-    // Показать финальный экран
+
+    // 6. Показать финальный экран
     showFinalStats(characterData);
 }
 
-// Показать финальные статы
+// ✅ Обновите функцию showFinalStats()
 function showFinalStats(data) {
     document.querySelectorAll('.selection-step').forEach(step => {
         step.classList.remove('active');
     });
     document.getElementById('character-final').classList.add('active');
-    
-    // Скрыть прогресс бар
     document.querySelector('.progress-bar').style.display = 'none';
-    
+
     const html = `
+        <p><strong>✨ Имя:</strong> ${data.name}</p>
         <p><strong>🧬 Раса:</strong> ${raceNames[data.race]}</p>
         <p><strong>⚔️ Класс:</strong> ${classNames[data.className]}</p>
         <p><strong>❤️ HP:</strong> ${data.stats.maxHp}</p>
@@ -298,7 +331,7 @@ function showFinalStats(data) {
         <p><strong>🔮 Маг.Атака:</strong> ${data.stats.magAtk}</p>
         <p><strong>🧿 Маг.Защита:</strong> ${data.stats.magDef}</p>
     `;
-    
+
     document.getElementById('final-stats').innerHTML = html;
 }
 
